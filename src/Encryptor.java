@@ -73,6 +73,43 @@ public class Encryptor {
      }
 
     public String decryptMessage(String encryptedMessage) {
-
+        String message = "";
+        int chunk = numRows * numCols;
+        fillBlockColumn(encryptedMessage);
+        while(encryptedMessage.length() !=  0){
+            fillBlockColumn(encryptedMessage);
+            message += decryptBlock();
+            if(encryptedMessage.length() >= chunk){
+                encryptedMessage = encryptedMessage.substring(chunk);
+            }else{
+                encryptedMessage = "";
+            }
+        }
+        for(int i = message.length(); i >= 0; i--){
+            if(message.substring(i-1,i).equals("A")){
+                message = message.substring(0, i-1);
+            }else{
+                break;
+            }
+        }
+        return message;
     }
-}
+
+    private String decryptBlock() {
+        String result = "";
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                result += letterBlock[row][col];
+            }
+        }
+        return result;
+    }
+    public void fillBlockColumn(String str){
+        for(int column = 0; column < letterBlock[0].length; column++){
+            for(int row = 0; row < letterBlock.length; row++){
+                letterBlock[row][column] = str.substring(0,1);
+                str = str.substring(1);
+            }
+        }
+    }
+    }
